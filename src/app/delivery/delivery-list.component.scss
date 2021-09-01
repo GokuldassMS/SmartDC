@@ -1,0 +1,62 @@
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+
+.search-result-list {
+  margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  background-color: #fafafa;
+  min-height: 200px;
+  text-align: center;
+  padding-top: 5px;
+}
+
+[nz-form-label] {
+  overflow: visible;
+ 
+}
+
+button {
+  margin-left: 8px;
+}
+
+.collapse {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.search-area {
+  text-align: right;
+}
+
+.phone-select {
+  width: 70px;
+}
+
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+
+.dynamic-delete-button:hover {
+  color: #777;
+}
+
+.passenger-input {
+  width: 60%;
+  margin-right: 8px;
+}
+
+
+
+.add-button {
+  width: 60%;
+}

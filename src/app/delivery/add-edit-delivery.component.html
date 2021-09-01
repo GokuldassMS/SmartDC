@@ -1,0 +1,234 @@
+<div class="card">
+  <h4 class="card-header">Add Delivery Details</h4> 
+  <br>
+  <form nz-form [formGroup]="deliveryForm" class="ant-advanced-search-form" >
+  
+    <!-- <div nz-row [nzGutter]="16">
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 10 }">
+            <button nz-button nzType="dashed" class="add-button" (click)="addField($event)">
+              <i nz-icon nzType="plus"></i>
+              Add more
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div> -->
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSm]="10">Company Name</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="selectedValue" formControlName="delCompName">
+              <nz-option *ngFor="let option of companyListOfOption" [nzLabel]="option" [nzValue]="option"></nz-option>
+              <nz-option nzLabel="Default Value1" nzValue="Default" nzHide></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+        <nz-form-item>
+          <nz-form-label nzFor="delCompGSTNo" [nzSm]="10" >GST No.</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="GST No."
+              formControlName="delCompGSTNo"
+              readonly
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item>
+          <nz-form-label nzFor="delCustName" [nzSm]="10" nzRequired >Customer Name</nz-form-label>
+          <nz-form-control >
+            <nz-select [(ngModel)]="selectedValue" formControlName="delCustName">
+              <nz-option *ngFor="let option of companyListOfOption" [nzLabel]="option" [nzValue]="option"></nz-option>
+              <nz-option nzLabel="Default Value" nzValue="Default" nzHide></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+        <nz-form-item>
+          <nz-form-label nzFor="delCustGSTNo" [nzSm]="10" >GST No.</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="GST No."
+              formControlName="delCustGSTNo"
+              readonly
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSm]="10">Purchase Date</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter the purchase date.">
+            <nz-date-picker  formControlName="delPurchaseDate" nzPlaceHolder="Select purchase date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+        <nz-form-item>
+          <nz-form-label nzFor="delPartyDCNo" [nzSm]="10">Party's D.C No.</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="Party's D.C No"
+              formControlName="delPartyDCNo"
+              readonly
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item>
+          <nz-form-label nzFor="delChallanNo" [nzSm]="10" nzRequired >Challan No.</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter the challan No.">
+            <input
+              nz-input
+              placeholder="Challan No."
+              formControlName="delChallanNo"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+        <nz-form-item>
+          <nz-form-label [nzSm]="10" nzRequired>Delivery Date</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter the delivery date.">
+            <nz-date-picker  formControlName="delDate" nzPlaceHolder="Select delivery date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>    
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item>
+          <nz-form-label [nzSm]="10" nzRequired>Vehicle No.</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter the vehicle No.">
+            <input
+              nz-input
+              placeholder="Vehicle No."
+              formControlName="delVehicleNo"
+             
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+       
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="8" >
+        <nz-form-item *ngFor="let control of listOfControl; let i = index">
+          <nz-form-label [nzXs]="24" [nzSm]="10" *ngIf="i === 0" [nzFor]="control.controlInstance">
+            Particulars
+          </nz-form-label>
+          <nz-form-control
+            [nzXs]="24"
+            [nzSm]="15"
+            [nzOffset]="i === 0 ? 0 : 10"
+            nzErrorTip="Please input particulars's name or delete this field."
+          >
+            <input
+              class="passenger-input"
+              nz-input
+              placeholder="Particulars"
+              [attr.id]="control.id"
+              [formControlName]="control.controlInstance"
+            />
+           
+            <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)"></i>
+          </nz-form-control>
+      
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="0">
+        <nz-form-item *ngFor="let control of listOfControl1; let i = index">
+          
+          <!-- <nz-form-control
+          [nzXs]="24"
+          [nzSm]="6"
+          [nzOffset]="i === 0 ? 0 : 0"
+          nzErrorTip="Please input particulars's name or delete this field."
+          >
+          <input
+            class="passenger-input"
+            nz-input
+            placeholder="Quantity"
+            [attr.id]="control.id"
+            [formControlName]="control.controlInstance"
+          />
+           
+          <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)"></i>
+          </nz-form-control> -->
+          
+        </nz-form-item>
+        
+      </div> 
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="8" nzOffset="3" >
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button  class="add-button" (click)="addField($event)" nzType="primary">
+              <i nz-icon nzType="plus"></i>
+              Add more
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="8" nzOffset="2">
+          
+      </div>
+    </div>
+    <br>
+    <div nz-row>
+      <div nz-col nzSpan="8" ><div class="inner-box">col-8</div></div>
+      <div nz-col nzSpan="8" nzOffset="2"><div class="inner-box">col-8</div></div>
+    </div>
+    <br>
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div>
+      <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div>
+      <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div>
+      <div nz-col class="gutter-row" [nzSpan]="6"><div class="inner-box">col-6</div></div>
+    </div>
+    <br>
+    <div nz-row>
+      <div nz-col nzSpan="8" ><div class="inner-box">col-8</div></div>
+      <div nz-col nzSpan="8" nzOffset="8"><div class="inner-box">col-8</div></div>
+    </div>
+    <br>
+    <br>
+    <div nz-row>
+      <div nz-col nzSpan="6" nzOffset="6"><div class="inner-box">col-6 col-offset-6</div></div>
+      <div nz-col nzSpan="6" nzOffset="6"><div class="inner-box">col-6 col-offset-6</div></div>
+    </div>
+    <br>
+    <div nz-row>
+      <div nz-col nzSpan="12" nzOffset="6"><div class="inner-box">col-12 col-offset-6</div></div>
+    </div>
+
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="search-area">
+        <button nz-button nzType="primary">Save</button>
+        <button nz-button nzType="danger" (click)="resetForm()">Clear</button> 
+      </div>
+    </div>
+   
+    </form>
+    
+</div>

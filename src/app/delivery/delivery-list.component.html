@@ -1,0 +1,289 @@
+<div class="card">
+  <h4 class="card-header">Delivery Details</h4> 
+  <br>
+  <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form" (ngSubmit)="submitForm()">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8" >
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" nzRequired>Customer Name</nz-form-label>
+          <nz-form-control>
+            <nz-select [(ngModel)]="multipleValue" [nzSize]="size" nzMode="multiple" nzPlaceHolder="Select customer name">
+              <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" >Delivery Date</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="deliveryDate" nzPlaceHolder="Select delivery date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label nzFor="ChallanNo" [nzSm]="8">Challan No.</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="Challan No."
+              formControlName="ChallanNo"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-form-item>
+          <nz-form-label nzFor="partyDCNo" [nzSm]="8">Party's DC.No.</nz-form-label>
+          <nz-form-control>
+            <input
+              nz-input
+              placeholder="Party's DC.No."
+              formControlName="partyDCNo"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="search-area">
+      
+        <button nz-button nzType="primary">
+          <i nz-icon nzType="search"></i>
+          Search
+        </button>
+        <button nz-button nzType="danger" (click)="resetForm()">Clear</button> 
+        <button nz-button nzType="primary" (click)="showModal()">Add Delivery Details</button>
+        
+      </div>
+    </div>
+  </form>
+  <div class="search-result-list">
+    <nz-table
+    nzShowSizeChanger
+    [nzData]="DeliveryList"
+    [nzFrontPagination]="false"
+    [nzLoading]="loading"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="pageIndex"
+    (nzQueryParams)="onQueryParamsChange($event)"
+    >
+    <thead>
+        <tr>
+          <th style="width: 13%">Customer Name</th>
+          <th style="width: 10%">Delivery Date</th>
+          <th style="width: 10%">Challan No.</th>
+          <th style="width: 10%">Party's D.C.No.</th>
+          <th style="width: 10%">Vehicle No.</th>
+          <th style="width: 15%">Particulars</th>
+          <th style="width: 12%">Delivery Status</th>
+          <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let deliveryList of DeliveryList">
+        <td></td>              
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td>
+        <td></td> 
+        <td></td>  
+        <td style="white-space: nowrap">
+
+          <i _ngcontent-docs-c228="" nz-icon="" data-toggle="modal" data-target=".bd-example-modal-lg"                  
+          data-backdrop="static" data-keyboard="false"
+        
+          class="cursor-pointer">
+            <svg viewBox="64 64 896 896" focusable="false" fill="currentColor" width="1.5em" height="1.5em" data-icon="edit" aria-hidden="true">
+            <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z">
+
+            </path>
+            </svg>
+          </i>
+          &nbsp; &nbsp; 
+      
+          
+
+          <i  nz-popconfirm nzPopconfirmTitle="Sure to delete?"  _ngcontent-docs-c228="" nz-icon="" class="cursor-pointer">
+            <svg viewBox="64 64 896 896" focusable="false" fill="currentColor" width="1.5em" height="1.5em" 
+            data-icon="delete" aria-hidden="true">
+            <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z">
+            </path>
+            </svg>
+          </i>
+              
+          
+          
+        </td>
+      </tr>
+    </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<!-- <nz-modal 
+[(nzVisible)]="isVisible" 
+nzTitle="{{deliveryTitle}}"
+(nzOnCancel)="handleCancel()"
+nzCentered
+nzWidth="1040"
+>
+  <form nz-form [formGroup]="deliveryForm" class="ant-advanced-search-form" >
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12" >
+      <nz-form-item>
+        <nz-form-label [nzSm]="10" nzRequired >Company Name</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="selectedValue" formControlName="delCompName">
+            <nz-option *ngFor="let option of companyListOfOption" [nzLabel]="option" [nzValue]="option"></nz-option>
+            <nz-option nzLabel="Default Value" nzValue="Default" nzHide></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12" >
+      <nz-form-item>
+        <nz-form-label nzFor="delCompGSTNo" [nzSm]="10" >GST No.</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            placeholder="GST No."
+            formControlName="delCompGSTNo"
+            readonly
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12" >
+      <nz-form-item>
+        <nz-form-label nzFor="delCustName" [nzSm]="10" nzRequired >Customer Name</nz-form-label>
+        <nz-form-control >
+          <nz-select [(ngModel)]="selectedValue" formControlName="delCustName">
+            <nz-option *ngFor="let option of companyListOfOption" [nzLabel]="option" [nzValue]="option"></nz-option>
+            <nz-option nzLabel="Default Value" nzValue="Default" nzHide></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12" >
+      <nz-form-item>
+        <nz-form-label nzFor="delCustGSTNo" [nzSm]="10" >GST No.</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            placeholder="GST No."
+            formControlName="delCustGSTNo"
+            readonly
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <nz-form-label [nzSm]="10" nzRequired>Purchase Date</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the purchase date.">
+          <nz-date-picker  formControlName="delPurchaseDate" nzPlaceHolder="Select purchase date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12" >
+      <nz-form-item>
+        <nz-form-label nzFor="delPartyDCNo" [nzSm]="10" >Party's D.C No.</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            placeholder="Party's D.C No"
+            formControlName="delPartyDCNo"
+            readonly
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <nz-form-label nzFor="delChallanNo" [nzSm]="10" nzRequired >Challan No.</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the challan No.">
+          <input
+            nz-input
+            placeholder="Challan No."
+            formControlName="delChallanNo"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <nz-form-label [nzSm]="10" nzRequired>Delivery Date</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the delivery date.">
+          <nz-date-picker  formControlName="delDate" nzPlaceHolder="Select delivery date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+   
+  </div>
+  
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item>
+        <nz-form-label [nzSm]="10" nzRequired>Vehicle No.</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter the vehicle No.">
+          <input
+            nz-input
+            placeholder="Vehicle No."
+            formControlName="delVehicleNo"
+           
+          />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="12">
+      <nz-form-item *ngFor="let control of listOfControl; let i = index">
+        <nz-form-label [nzXs]="24" [nzSm]="10" *ngIf="i === 0" [nzFor]="control.controlInstance">
+          Passengers
+        </nz-form-label>
+        <nz-form-control
+          [nzXs]="24"
+          [nzSm]="20"
+          [nzOffset]="i === 0 ? 0 : 4"
+          nzErrorTip="Please input passenger's name or delete this field."
+        >
+          <input
+            class="passenger-input"
+            nz-input
+            placeholder="placeholder"
+            [attr.id]="control.id"
+            [formControlName]="control.controlInstance"
+          />
+          <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)"></i>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+          <button nz-button nzType="dashed" class="add-button" (click)="addField($event)">
+            <i nz-icon nzType="plus"></i>
+            Add more
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+ 
+  </form>
+  <div *nzModalFooter >
+    <button nz-button nzType="primary" (click)="handleOk()">Save</button>
+    <button nz-button nzType="danger" (click)="handleCancel()">Cancel</button>
+  </div>
+</nz-modal> -->
