@@ -21,6 +21,7 @@ import { AddEditCompanyComponent } from './company//add-edit-company.component';
 import { routes } from './app.routing.module';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 
 
 registerLocaleData(en);
@@ -41,7 +42,9 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NgZorroAntdModule,
     BrowserAnimationsModule,
     ScrollingModule,
-    DragDropModule
+    DragDropModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
     
   ],
   declarations: [ AppComponent ],

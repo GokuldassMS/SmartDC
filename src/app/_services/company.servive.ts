@@ -25,11 +25,10 @@ export class CompanyService {
     addCompany(company: Company) {
         /*this.departments.push(department);        
         this.departmentsChanged.next(this.departments.slice());*/   
-        alert('c') ;
         return this.http.post(this.baseURL, company);
     }
 
-    updateCompany(company: Company){           
+    updateCompany(company: Company){      
       return this.http.put(`${this.baseURL}/${company.companyId}`,company);
     }
 
@@ -38,9 +37,9 @@ export class CompanyService {
       return this.http.get(this.baseURL,  { headers: this.headers } );  
     }
 
-    getCompany() {   
+    getCompanyCount(params) {   
          
-      return this.http.get(this.baseURL+ '/GetCompanyCount',  { headers: this.headers } );  
+      return this.http.get(this.baseURL+ '/GetCompCount',  {params } );  
     }
 
     getAllByFilter(params) {   
@@ -49,11 +48,10 @@ export class CompanyService {
     }
 
     companyNameExist(companyName:string){    
-      alert('b')  ;
       return this.http.post<any>(this.baseURL+ '/GetCompanyNameExists',{ companyName: companyName },{ headers: this.header});
     }
 
-    deletecompany(id:number){
+    deleteCompany(id:number){
      return this.http.delete(`${this.baseURL}/${id}`);
     }
 
