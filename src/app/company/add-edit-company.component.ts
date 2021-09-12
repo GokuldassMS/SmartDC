@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { CompanyService } from '../_services/company.servive';
 import { first } from 'rxjs/operators';
 import { format, endOfMonth, differenceInCalendarDays, subHours } from 'date-fns';
+import { CompanyService } from '../_services/company.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
@@ -64,9 +64,10 @@ export class AddEditCompanyComponent implements OnInit {
   }
 
   resetForm(): void {
+    this.error=null;
+    this.companyId=0;
     this.compAddEditForm.reset();
-    this.phoneNoCode='+91';
-    this.altPhoneNoCode='+91';
+    this.initializeControls();
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
@@ -87,24 +88,7 @@ export class AddEditCompanyComponent implements OnInit {
   ngOnInit(): void {
 
     this.getcompanyList(this.pageIndex, this.pageSize, null, null, []); 
-
-    this.compAddEditForm = this.fb.group({
-      companyName: [null, [Validators.required]],
-      gstNo: [null, [Validators.required]],
-      address1: [null, [Validators.required]],
-      address2: [null, null],
-      city: [null, [Validators.required]],
-      status: [true],
-      pinCode: [null, [Validators.required]],
-      phoneNoCode: ['+91'],
-      phoneNo: [null, [Validators.required]],
-      altPhoneNoCode: ['+91'],
-      altPhoneNo: [null, null],
-    });
-
-    this.phoneNoCode='+91';
-    this.altPhoneNoCode='+91';
-    this.isChecked = true;
+    this.initializeControls();
    
   }
 
@@ -285,6 +269,26 @@ export class AddEditCompanyComponent implements OnInit {
     this.createdOn = this.addupdateComp.createdOn;
     this.modifiedBy = this.addupdateComp.modifiedBy;
     this.modifiedOn =this.addupdateComp.modifiedOn;
+  }
+
+  initializeControls(){
+    this.compAddEditForm = this.fb.group({
+      companyName: [null, [Validators.required]],
+      gstNo: [null, [Validators.required]],
+      address1: [null, [Validators.required]],
+      address2: [null, null],
+      city: [null, [Validators.required]],
+      status: [true],
+      pinCode: [null, [Validators.required]],
+      phoneNoCode: ['+91'],
+      phoneNo: [null, [Validators.required]],
+      altPhoneNoCode: ['+91'],
+      altPhoneNo: [null, null],
+    });
+
+    this.phoneNoCode='+91';
+    this.altPhoneNoCode='+91';
+    this.isChecked = true;
   }
 
 
