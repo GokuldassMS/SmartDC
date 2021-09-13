@@ -1,7 +1,10 @@
 <div class="card">
   <h4 class="card-header">User Details</h4> 
   <br>
-  <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form" (ngSubmit)="submitForm()">
+  <form nz-form [formGroup]="userAddEditForm" class="ant-advanced-search-form" (ngSubmit)="submitForm()">
+   <div class="alert alert-danger" *ngIf="error">
+      <p>{{ error }}</p>
+   </div>
     <div nz-row [nzGutter]="24">
       <div nz-col [nzSpan]="8" >
         <nz-form-item>
@@ -11,7 +14,8 @@
               nz-input
               placeholder="First Name"
               formControlName="firstName"
-              maxlength="50" 
+              maxlength="20" 
+              [(ngModel)]="firstName"
             />
           </nz-form-control>
         </nz-form-item>
@@ -24,6 +28,8 @@
               nz-input
               placeholder="Last Name"
               formControlName="lastName"
+              maxlength="20" 
+              [(ngModel)]="lastName"
             />
           </nz-form-control>
         </nz-form-item>
@@ -36,6 +42,8 @@
               nz-input
               placeholder="User Name"
               formControlName="userName"
+              maxlength="20" 
+              [(ngModel)]="userName"
             />
           </nz-form-control>
         </nz-form-item>
@@ -48,7 +56,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="8" >Status</nz-form-label>
           <nz-form-control>
-            <label nz-checkbox formControlName="status">
+            <label nz-checkbox formControlName="status" [(ngModel)]="isChecked">
             </label>
           </nz-form-control>
         </nz-form-item>
@@ -58,10 +66,11 @@
           <nz-form-label nzFor="password" [nzSm]="8" nzRequired>Password</nz-form-label>
           <nz-form-control nzErrorTip="Please enter the password.">
             <input
-              nz-input
+              nz-input type="password"
               placeholder="Password"
               formControlName="password"
-              maxlength="50" 
+              maxlength="20" 
+              [(ngModel)]="password"
             />
           </nz-form-control>
         </nz-form-item>
@@ -75,6 +84,7 @@
               placeholder="E-mail"
               formControlName="email"
               maxlength="30" 
+              [(ngModel)]="email"
             />
           </nz-form-control>
         </nz-form-item>
@@ -87,13 +97,13 @@
           <nz-form-control nzErrorTip="Please enter the phone no.">
             <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
               <ng-template #addOnBeforeTemplate>
-                <nz-select formControlName="phoneNoCode" class="phone-select">
+                <nz-select formControlName="phoneNoCode" class="phone-select" [(ngModel)]="phoneNoCode">
                   <nz-option nzLabel="+91" nzValue="+91"></nz-option>
                   <nz-option nzLabel="+044" nzValue="+044"></nz-option>
                 </nz-select>
               </ng-template>
               <input formControlName="phoneNo" nz-input 
-              placeholder="Phone No." maxlength="20"  />
+              placeholder="Phone No." maxlength="20" [(ngModel)]="phoneNo"  />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
@@ -127,26 +137,26 @@
     >
     <thead>
         <tr>
-          <th style="width: 20%">First Name</th>
-          <th style="width: 20%">Last Name</th>
-          <th style="width: 20%">User Name</th>
-          <th style="width: 10%">Status</th>
-          <th style="width: 10%">Phone No.</th>
+          <th style="width: 20%" nzColumnKey="firstName" [nzSortFn]="true">First Name</th>
+          <th style="width: 20%" nzColumnKey="lastName" [nzSortFn]="true">Last Name</th>
+          <th style="width: 15%" nzColumnKey="userName" [nzSortFn]="true">User Name</th>
+          <th style="width: 10%" nzColumnKey="status" [nzFilters]="filterStatus" [nzFilterFn]="true">Status</th>
+          <th style="width: 15%" nzColumnKey="phoneNo" [nzSortFn]="true">Phone No.</th>
           <th style="width: 10%"></th>
         </tr>
     </thead>
     <tbody>
       <tr *ngFor="let userList of UserList">
-        <td></td>              
-        <td></td> 
-        <td></td> 
-        <td></td> 
-        <td></td>  
+        <td>{{userList.firstName}}</td>              
+        <td>{{userList.lastName}}</td> 
+        <td>{{userList.userName}}</td> 
+        <td>{{userList.status == 'A' ? 'Active' : 'Inactive'}}</td> 
+        <td>{{userList.phoneNoCode}}-{{userList.phoneNo}}</td>  
         <td style="white-space: nowrap">
 
-          <i _ngcontent-docs-c228="" nz-icon="" data-toggle="modal" data-target=".bd-example-modal-lg"                  
-          data-backdrop="static" data-keyboard="false"
-        
+          <i _ngcontent-docs-c228="" nz-icon=""  data-toggle="modal" data-target="#exampleModal"
+          (click)="ShowUserDetails(userList)" 
+          data-backdrop="static" data-keyboard="false" 
           class="cursor-pointer">
             <svg viewBox="64 64 896 896" focusable="false" fill="currentColor" width="1.5em" height="1.5em" data-icon="edit" aria-hidden="true">
             <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z">
@@ -155,10 +165,8 @@
             </svg>
           </i>
           &nbsp; &nbsp; 
-      
-          
-
-          <i  nz-popconfirm nzPopconfirmTitle="Sure to delete?"  _ngcontent-docs-c228="" nz-icon="" class="cursor-pointer">
+          <i  nz-popconfirm nzPopconfirmTitle="Sure to delete?"  _ngcontent-docs-c228="" nz-icon="" class="cursor-pointer" 
+          (nzOnConfirm)="deleteUser(userList.userId)">
             <svg viewBox="64 64 896 896" focusable="false" fill="currentColor" width="1.5em" height="1.5em" 
             data-icon="delete" aria-hidden="true">
             <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z">

@@ -160,11 +160,11 @@
     >
     <thead>
         <tr>
-          <th style="width: 20%">Customer Name</th>
-          <th style="width: 10%">Status</th>
-          <th style="width: 20%">GST.No.</th>
-          <th style="width: 15%">City</th>
-          <th style="width: 15%">Phone No.</th>
+          <th style="width: 20%" nzColumnKey="customerName" [nzSortFn]="true">Customer Name</th>
+          <th style="width: 10%" nzColumnKey="status" [nzFilters]="filterStatus" [nzFilterFn]="true">Status</th>
+          <th style="width: 20%" nzColumnKey="gstNo" [nzSortFn]="true">GST.No.</th>
+          <th style="width: 15%" nzColumnKey="city" [nzSortFn]="true">City</th>
+          <th style="width: 15%" nzColumnKey="phoneNo" [nzSortFn]="true">Phone No.</th>
           <th style="width: 10%"></th>
         </tr>
     </thead>
