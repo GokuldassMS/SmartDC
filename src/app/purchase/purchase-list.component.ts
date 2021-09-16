@@ -68,7 +68,13 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
-    
+    const { pageSize, pageIndex, sort, filter } = params;
+    const currentSort = sort.find(item => item.value !== null);
+    //alert(currentSort);
+    const sortField = (currentSort && currentSort.key) || null;
+    //alert(sortField);
+    const sortOrder = (currentSort && currentSort.value) || null;
+    this.getPurchaseList(pageIndex, pageSize, sortField, sortOrder, filter);
   }
 
   constructor(private fb: FormBuilder,
@@ -79,6 +85,8 @@ export class PurchaseListComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
 
     this.validateForm = this.fb.group({
 
@@ -193,7 +201,7 @@ export class PurchaseListComponent implements OnInit {
 
     if (this.purchaseId > 0) {             
         this.purchaseService.updatePurchase(this.addupdatePurchase).subscribe(res=>{                
-            this.toastr.success('Updated successfully', 'SmartDC - Purchase(s)') 
+            this.toastr.success('Updated successfully', 'SmartDC - Purchase Detail(s)') 
             this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
         },
         
@@ -209,7 +217,7 @@ export class PurchaseListComponent implements OnInit {
           .pipe(first())
           .subscribe(
               data => {                                                                     
-                  this.toastr.success('Added successfully', 'SmartDC - Purchase(s)')
+                  this.toastr.success('Added successfully', 'SmartDC - Purchase Detail(s)')
                   this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
               },
               error => {
@@ -266,8 +274,8 @@ export class PurchaseListComponent implements OnInit {
     if (this.purchaseItem.purchaseDate !=""){
       this.purchaseDate = format(new Date(this.purchaseItem.purchaseDate), 'MM/dd/yyyy');
     }
-    this.styleNo=this.purchaseItem.styleNo 
-    this.dcNo=this.purchaseItem.dcNo;
+    this.styleNo = this.purchaseItem.styleNo; 
+    this.dcNo = this.purchaseItem.dcNo;
     this.vehicleNo=this.purchaseItem.vehicleNo;
     this.createdBy = this.purchaseItem.createdBy
     this.createdOn = this.purchaseItem.createdOn;
@@ -275,6 +283,14 @@ export class PurchaseListComponent implements OnInit {
     this.modifiedOn =this.purchaseItem.modifiedOn;
     
   }
+
+  deletePurchaseDetails(id: number){
+    this.purchaseService.deletePurchase(id).subscribe(data=>{         
+      this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []);  
+      this.toastr.error("Deleted successfully", 'SmartDC - Purchase Detail(s)');
+    })
+  
+}
 
 
   

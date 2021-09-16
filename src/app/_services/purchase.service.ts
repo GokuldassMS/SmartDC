@@ -28,19 +28,20 @@ export class PurchaseService {
     }
 
     getPurchaseCount(params) {   
-        return this.http.get(this.baseURL+ '/GetPurchaseCount',   {params } );  
+        return this.http.get(this.baseURL+ '/GetPurchaseDetailsCount',   {params } );  
     }
   
     getAllByFilter(params) { 
-        return this.http.get(this.baseURL+ '/GetPurchaseByFilter',  { params } );  
+        return this.http.get(this.baseURL+ '/GetPurchaseDetailsByFilter',  { params } );  
     }
 
     addPurchase(purchase: Purchase) {
-        alert('1');
+       
         return this.http.post(this.baseURL, purchase);
     }
 
-    updatePurchase(purchase: Purchase){           
+    updatePurchase(purchase: Purchase){    
+        alert('1');       
         return this.http.put(`${this.baseURL}/${purchase.purchaseId}`,purchase);
     }
     deletePurchase(id:number){
