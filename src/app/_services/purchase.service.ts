@@ -35,13 +35,15 @@ export class PurchaseService {
         return this.http.get(this.baseURL+ '/GetPurchaseDetailsByFilter',  { params } );  
     }
 
+    getAllBySearch(params) { 
+        return this.http.get(this.baseURL+ '/GetPurchaseDetailsBySearch',  { params } );  
+    }
+
     addPurchase(purchase: Purchase) {
-       
         return this.http.post(this.baseURL, purchase);
     }
 
-    updatePurchase(purchase: Purchase){    
-        alert('1');       
+    updatePurchase(purchase: Purchase){         
         return this.http.put(`${this.baseURL}/${purchase.purchaseId}`,purchase);
     }
     deletePurchase(id:number){

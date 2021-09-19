@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class PurchaseListComponent implements OnInit {
 
-  validateForm!: FormGroup;
+  purchaseSearchForm!: FormGroup;
   purchaseForm:FormGroup;
   controlArray: Array<{ index: number; show: boolean }> = [];
   isCollapse = true;
@@ -61,21 +61,12 @@ export class PurchaseListComponent implements OnInit {
 
   //selectedValue = 'Default';
   selectedCustValue = 'Default';
+  selectedSearchCustValue = 'Default';
+  pSearchDate: string;
+  pSearchDcNo: string;
    
 
-  resetForm(): void {
-    this.validateForm.reset();
-  }
-
-  onQueryParamsChange(params: NzTableQueryParams): void {
-    const { pageSize, pageIndex, sort, filter } = params;
-    const currentSort = sort.find(item => item.value !== null);
-    //alert(currentSort);
-    const sortField = (currentSort && currentSort.key) || null;
-    //alert(sortField);
-    const sortOrder = (currentSort && currentSort.value) || null;
-    this.getPurchaseList(pageIndex, pageSize, sortField, sortOrder, filter);
-  }
+ 
 
   constructor(private fb: FormBuilder,
     private custService:CustomerService,
@@ -86,39 +77,51 @@ export class PurchaseListComponent implements OnInit {
 
   ngOnInit(): void {
 
+    let pCusName = '';
+    let pDate='';
+    let pStyleNo='';
+    let pDcNo='';
+    let pVehicleNo='';
+
+    let sCusName = '';
+    let sDate='';
+    let sDcNo='';
+
+
     this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
 
-    this.validateForm = this.fb.group({
+    this.purchaseSearchForm = this.fb.group({
 
-      purCustName: [null, [Validators.required]],
-      purDate: [null, null],
-      purDcNo: [null, null],
+      pSearchCustName: [sCusName, [Validators.required]],
+      pSearchDate: [sDate,[Validators.required]],
+      pSearchDcNo: [null, null],
      
     });
 
     this.purchaseForm = this.fb.group({
 
-      customerName: [null, [Validators.required]],
-      purchaseDate: [null, [Validators.required]],
-      styleNo:  [null, [Validators.required]],
-      dcNo:  [null, [Validators.required]],
-      vehicleNo:  [null, [Validators.required]],
+      customerName: [pCusName, [Validators.required]],
+      purchaseDate: [pDate, [Validators.required]],
+      styleNo:  [pStyleNo, [Validators.required]],
+      dcNo:  [pDcNo, [Validators.required]],
+      vehicleNo:  [pVehicleNo, [Validators.required]],
      
     });
 
-    const children: Array<{ label: string; value: string }> = [];
+    /*const children: Array<{ label: string; value: string }> = [];
     for (let i = 0; i < 5; i++) {
       children.push({ label: i.toString(36) + i, value: i.toString(36) + i });
     }
-    this.listOfOption = children;
+    this.listOfOption = children;*/
+    this.loadCustomerList();
    
   }
 
   submitForm(): void {
-    for (const i in this.validateForm.controls) {
-      if (this.validateForm.controls.hasOwnProperty(i)) {
-        this.validateForm.controls[i].markAsDirty();
-        this.validateForm.controls[i].updateValueAndValidity();
+    for (const i in this.purchaseSearchForm.controls) {
+      if (this.purchaseSearchForm.controls.hasOwnProperty(i)) {
+        this.purchaseSearchForm.controls[i].markAsDirty();
+        this.purchaseSearchForm.controls[i].updateValueAndValidity();
       }
     }
   }
@@ -162,7 +165,6 @@ export class PurchaseListComponent implements OnInit {
       }
     }
 
-    alert(this.purchaseForm.invalid);
     if (this.purchaseForm.invalid) {       
         return;
     }            
@@ -171,7 +173,10 @@ export class PurchaseListComponent implements OnInit {
   }
 
   onCancel(): void {
+    this.resetForm();
+    this.resetPurchaseSearch();
     this.isVisible = false;
+    this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
   }
 
   loadCustomerList(){
@@ -184,25 +189,24 @@ export class PurchaseListComponent implements OnInit {
     this.currentDate = new Date();
     this.gettime= format(new Date(this.currentDate.getTime()),'hh:mm:ss');
 
-    
     this.addupdatePurchase = {
       purchaseId:this.purchaseId,
       companyId: 4,// To be changed this.companyId,
       customerId:  parseInt(this.selectedCustValue),
-      purchaseDate: this.purchaseDate,
+      purchaseDate: format(new Date(this.purchaseDate), 'yyyy-MM-dd') +'T' + this.gettime+'.000Z',
       styleNo: this.styleNo,
       dcNo: this.dcNo,
       vehicleNo: this.vehicleNo,  
       createdBy: this.purchaseId > 0 ? this.createdBy : 4 ,    //this.createdBy,To be changed
-      createdOn: this.purchaseId > 0 ? this.addupdatePurchase.createdOn: format(this.currentDate,'yyyy-MM-dd') +'T' + this.gettime+'.000Z',
+      createdOn: this.purchaseId > 0 ? this.createdOn: format(this.currentDate,'yyyy-MM-dd') +'T' + this.gettime+'.000Z',
       modifiedBy: this.purchaseId > 0 ? 4 : null ,
       modifiedOn: this.purchaseId > 0 ? format(this.currentDate,'yyyy-MM-dd') +'T' + this.gettime+'.000Z' : null 
     };
 
-    if (this.purchaseId > 0) {             
-        this.purchaseService.updatePurchase(this.addupdatePurchase).subscribe(res=>{                
+    if (this.purchaseId > 0) {         
+        this.purchaseService.updatePurchase(this.addupdatePurchase).subscribe(res=>{ 
+            this.onCancel();               
             this.toastr.success('Updated successfully', 'SmartDC - Purchase Detail(s)') 
-            this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
         },
         
         error => {
@@ -216,9 +220,9 @@ export class PurchaseListComponent implements OnInit {
           this.purchaseService.addPurchase(this.addupdatePurchase)
           .pipe(first())
           .subscribe(
-              data => {                                                                     
+              data => {   
+                  this.onCancel();                                                                   
                   this.toastr.success('Added successfully', 'SmartDC - Purchase Detail(s)')
-                  this.getPurchaseList(this.pageIndex, this.pageSize, null, null, []); 
               },
               error => {
                   this.error = error;
@@ -277,7 +281,7 @@ export class PurchaseListComponent implements OnInit {
     this.styleNo = this.purchaseItem.styleNo; 
     this.dcNo = this.purchaseItem.dcNo;
     this.vehicleNo=this.purchaseItem.vehicleNo;
-    this.createdBy = this.purchaseItem.createdBy
+    this.createdBy = this.purchaseItem.createdBy;
     this.createdOn = this.purchaseItem.createdOn;
     this.modifiedBy = this.purchaseItem.modifiedBy;
     this.modifiedOn =this.purchaseItem.modifiedOn;
@@ -290,7 +294,80 @@ export class PurchaseListComponent implements OnInit {
       this.toastr.error("Deleted successfully", 'SmartDC - Purchase Detail(s)');
     })
   
-}
+  }
+
+  getPurchaseListBasedOnSearch() : void {
+    for (const i in this.purchaseSearchForm.controls) {
+      if (this.purchaseSearchForm.controls[i].value=='Default') {
+        this.purchaseSearchForm.controls[i].setValue(null);
+      }
+      if (this.purchaseSearchForm.controls.hasOwnProperty(i)) {
+        this.purchaseSearchForm.controls[i].markAsDirty();
+        this.purchaseSearchForm.controls[i].updateValueAndValidity();
+      }
+    }
+
+    if (this.purchaseSearchForm.invalid) {       
+        return;
+    } 
+    
+    this.getPurchaseListBySearch(this.pageIndex, this.pageSize, 4, parseInt(this.selectedSearchCustValue),
+    format(new Date(this.pSearchDate), 'dd/MM/yyyy'),this.pSearchDcNo);  
+  }
+
+  resetForm(): void {
+    this.purchaseForm.reset();
+    this.purchaseForm.setErrors(null); // could be removed
+    this.purchaseForm.updateValueAndValidity();
+  }
+
+  resetPurchaseSearch(): void {
+    this.purchaseSearchForm.reset();
+    this.purchaseSearchForm.setErrors(null); // could be removed
+    this.purchaseSearchForm.updateValueAndValidity();
+  }
+
+  onQueryParamsChange(params: NzTableQueryParams): void {
+    const { pageSize, pageIndex, sort, filter } = params;
+    const currentSort = sort.find(item => item.value !== null);
+    //alert(currentSort);
+    const sortField = (currentSort && currentSort.key) || null;
+    //alert(sortField);
+    const sortOrder = (currentSort && currentSort.value) || null;
+    this.getPurchaseList(pageIndex, pageSize, sortField, sortOrder, filter);
+  }
+
+  getPurchaseListBySearch(
+    pageIndex: number,
+    pageSize: number,
+    companyId: number,
+    customerId : number,
+    purchaseDate: string | null,
+    dcNo:string | null,
+  ): void {
+    this.loading = true;
+
+    let params = new HttpParams()
+    .append('pageIndex', `${pageIndex}`)
+    .append('pageSize', `${pageSize}`)
+    .append('companyId', `${companyId}`)
+    .append('customerId', `${customerId}`)
+    .append('purchaseDate', `${purchaseDate}`)
+    .append('dcNo', `${dcNo}`)
+
+    
+    this.purchaseService.getPurchaseCount(params).subscribe(data => {
+      this.total =parseInt(data.toString()); 
+    });
+
+    this.purchaseService.getAllBySearch(params).subscribe(data => {
+      this.loading = false;
+      this.PurchaseList=data;
+      console.log(data);
+      });
+  }
+
+  
 
 
   
